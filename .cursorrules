@@ -110,6 +110,16 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 - Separate the main parts of a component's html with an extra blank line for visual spacing
 - Use actions, not queries, in the app
 - Always tag a component with either `use server` or `use client` at the top, including layouts and pages
+- Add props where needed when defining new components
+
+Example of a component with props:
+
+```tsx
+interface SearchInputProps {
+  onSearch: (query: string) => void
+  className?: string
+}
+```
 
 ##### Organization
 
@@ -127,6 +137,7 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 - Use `"use server"` at the top of the file
 - Implement Suspense for asynchronous data fetching
 - Use a separate fetcher component for data loading (see example below)
+- Make sure to use `async` for all pages and components if they are server components
 
 Example of a server page:
 
