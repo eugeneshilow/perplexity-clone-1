@@ -1,26 +1,33 @@
 "use client"
 
+import { Search } from "lucide-react"
+import { SelectChat, SelectMessage } from "@/db/schema"
+
 interface ChatAreaProps {
-  className?: string
+  chat: SelectChat
+  initialMessages: SelectMessage[]
+  userId: string
 }
 
-export default async function ChatArea({ className }: ChatAreaProps) {
+export default function ChatArea({
+  chat,
+  initialMessages,
+  userId
+}: ChatAreaProps) {
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto p-4">
-        {/* Messages will go here */}
-      </div>
+    <div className="flex h-full items-center justify-center">
+      <div className="w-full max-w-2xl space-y-8 p-4">
+        <h1 className="animate-gradient-x bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text pb-1 text-center text-5xl font-extrabold tracking-tight text-transparent drop-shadow-lg">
+          Ask anything
+        </h1>
 
-      <div className="border-t p-4">
-        <div className="flex gap-2">
+        <div className="relative">
           <input
             type="text"
-            placeholder="Ask anything..."
-            className="flex-1 rounded-md border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search..."
+            className="w-full rounded-lg border px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-            Send
-          </button>
+          <Search className="absolute right-3 top-1/2 size-5 -translate-y-1/2 text-gray-400" />
         </div>
       </div>
     </div>

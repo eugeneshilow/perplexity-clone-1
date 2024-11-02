@@ -1,16 +1,30 @@
 "use server"
 
+import { Suspense } from "react"
+import { auth } from "@clerk/nextjs/server"
+import { getChatsAction } from "@/actions/db/chats-actions"
 import Sidebar from "./_components/sidebar"
+import SidebarSkeleton from "./_components/sidebar-skeleton"
 
-interface SearchLayoutProps {
+export default async function SearchLayout({
+  children
+}: {
   children: React.ReactNode
-}
-
-export default async function SearchLayout({ children }: SearchLayoutProps) {
+}) {
   return (
-    <div className="flex h-[calc(100vh-3.5rem)]">
-      <Sidebar className="w-80 border-r" />
+    <div className="flex h-screen">
+      <Suspense fallback={<SidebarSkeleton />}>
+        <SidebarFetcher />
+      </Suspense>
+
       <div className="flex-1">{children}</div>
     </div>
   )
+}
+
+async function SidebarFetcher() {
+  const { userId } = auth()
+  const { data: chats } = await getChatsAction(userId!)
+
+  return <Sidebar initialChats={chats || []} />
 }

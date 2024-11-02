@@ -1,25 +1,8 @@
 "use server"
 
-import { createMessage, getMessages } from "@/db/queries/messages-queries"
-import { InsertMessage, SelectMessage } from "@/db/schema"
+import { getMessages } from "@/db/queries/messages-queries"
+import { SelectMessage } from "@/db/schema"
 import { ActionState } from "@/types"
-import { revalidatePath } from "next/cache"
-
-export async function createMessageAction(
-  message: InsertMessage
-): Promise<ActionState<SelectMessage>> {
-  try {
-    const newMessage = await createMessage(message)
-    revalidatePath("/")
-    return {
-      isSuccess: true,
-      message: "Message created successfully",
-      data: newMessage
-    }
-  } catch (error) {
-    return { isSuccess: false, message: "Failed to create message" }
-  }
-}
 
 export async function getMessagesAction(
   chatId: string
@@ -32,6 +15,7 @@ export async function getMessagesAction(
       data: messages
     }
   } catch (error) {
+    console.error("Error getting messages:", error)
     return { isSuccess: false, message: "Failed to get messages" }
   }
 } 

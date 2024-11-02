@@ -1,15 +1,22 @@
 "use server"
 
-import { createChat, deleteChat, getChats } from "@/db/queries/chats-queries"
-import { InsertChat, SelectChat } from "@/db/schema"
+import { createChat, deleteChat, getChats, getChat } from "@/db/queries/chats-queries"
+import { SelectChat } from "@/db/schema"
 import { ActionState } from "@/types"
 import { revalidatePath } from "next/cache"
+import { auth } from "@clerk/nextjs/server"
 
 export async function createChatAction(
-  chat: InsertChat
+  name: string
 ): Promise<ActionState<SelectChat>> {
   try {
-    const newChat = await createChat(chat)
+    const { userId } = auth()
+
+    if (!userId) {
+      return { isSuccess: false, message: "User not authenticated" }
+    }
+
+    const newChat = await createChat(userId, name)
     revalidatePath("/")
     return {
       isSuccess: true,
@@ -17,6 +24,7 @@ export async function createChatAction(
       data: newChat
     }
   } catch (error) {
+    console.error("Error creating chat:", error)
     return { isSuccess: false, message: "Failed to create chat" }
   }
 }
@@ -49,5 +57,27 @@ export async function deleteChatAction(
     }
   } catch (error) {
     return { isSuccess: false, message: "Failed to delete chat" }
+  }
+}
+
+export async function getChatAction(id: string): Promise<ActionState<SelectChat>> {
+  try {
+    const chat = await getChat(id)
+    
+    if (!chat) {
+      return {
+        isSuccess: false,
+        message: "Chat not found"
+      }
+    }
+
+    return {
+      isSuccess: true,
+      message: "Chat retrieved successfully",
+      data: chat
+    }
+  } catch (error) {
+    console.error("Error getting chat:", error)
+    return { isSuccess: false, message: "Failed to get chat" }
   }
 } 
