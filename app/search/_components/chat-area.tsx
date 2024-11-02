@@ -24,7 +24,7 @@ export default function ChatArea({
         <div className="relative">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search"
             className="w-full rounded-lg border px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <Search className="absolute right-3 top-1/2 size-5 -translate-y-1/2 text-gray-400" />
